@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+<div class="row">
+  <div class="col-2 text-center">
+    <img class="img-fluid" style="max-width:75%; padding:10%" src="{{ url_for('static', filename='img/nitt.jpg') }}" alt="">
+  </div>
+  <div class="col-8">
+    <div class="jumbotron text-center">
+      <h1>Welcome to Innovac Mothra</h1>
+      <img class="img-fluid" src="{{ url_for('static', filename='img/mothra.gif') }}" alt="">
+    </div>
+  </div>
+  <div class="col-2 text-center">
+    <img class="img-fluid" src="{{ url_for('static', filename='img/pccl.png') }}" alt="">
+  </div>
+</div>
+
+<h2 align="center">Instructions</h2>
+
+<div class="container">
+  <h4>1. </h4>
+
+</div>
+
+{% endblock %}
