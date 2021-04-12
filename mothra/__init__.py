@@ -17,5 +17,9 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 Migrate(app,db)
 
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'my_view.login'
+
 from mothra.views import my_view
 app.register_blueprint(my_view)

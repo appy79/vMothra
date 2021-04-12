@@ -1,0 +1,27 @@
+from flask_wtf import FlaskForm
+from wtforms import StringField, PasswordField, SubmitField, RadioField, IntegerField
+from wtforms.validators import DataRequired, EqualTo, NumberRange
+from wtforms import ValidationError
+from mothra.models import User
+
+class LoginForm(FlaskForm):
+    roll = StringField('Roll Number', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    submit = SubmitField('Log In')
+    
+
+class RegistrationForm(FlaskForm):
+    roll = IntegerField('Roll Number', validators=[DataRequired(),NumberRange(min=205120001, max=205120113, message="Only MCA 2023 batch can register for now")])
+    username = StringField('Username', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired(), EqualTo('pass_confirm', message="Passwords must Match!")])
+    pass_confirm = PasswordField('Confirm Password', validators=[DataRequired()])
+    user_type=RadioField('User Type', choices=['Godzilla', 'Mothra'])
+    submit = SubmitField('Register')
+
+    def validate_roll(self,roll):
+        if User.query.filter_by(roll=self.roll.data).first():
+            raise ValidationError("Roll Number already registered!")
+
+    def validate_username(self,username):
+        if User.query.filter_by(username=self.username.data).first():
+            raise ValidationError("Username already registered!")
