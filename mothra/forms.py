@@ -8,7 +8,7 @@ class LoginForm(FlaskForm):
     roll = StringField('Roll Number', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Log In')
-    
+
 
 class RegistrationForm(FlaskForm):
     roll = IntegerField('Roll Number', validators=[DataRequired(),NumberRange(min=205120001, max=205120113, message="Only MCA 2023 batch can register for now")])
@@ -16,6 +16,7 @@ class RegistrationForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired(), EqualTo('pass_confirm', message="Passwords must Match!")])
     pass_confirm = PasswordField('Confirm Password', validators=[DataRequired()])
     user_type=RadioField('User Type', choices=['Godzilla', 'Mothra'])
+    level=IntegerField('Level')
     submit = SubmitField('Register')
 
     def validate_roll(self,roll):

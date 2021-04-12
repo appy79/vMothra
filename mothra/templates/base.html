@@ -9,8 +9,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
   </head>
-  <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-secondary">
+  <body background="{{ url_for('static', filename='img/home_bg.jpg') }}">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-info">
       <a class="navbar-brand" href="{{url_for('index')}}">MOTHRA</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -42,12 +42,12 @@
             <a class="nav-link" href="{{url_for('register')}}">Register</a>
           </li>
           {% endif %}
-
-
         </ul>
+          <h5 class="nav-item my-2 my-lg-0 text-white">Mothra Level : {{lev}}</h5>
+
       </div>
     </nav>
-    <div class="content">
+    <div class="content text-white">
 
     {% block content %}
 
@@ -56,7 +56,7 @@
 
     </div>
 
-    <footer class="footer text-center bg-secondary">
+    <footer class="footer text-center bg-info">
         <span class="text-white ">Made with love <span style="font-size:125%;color:red;">&hearts;</span> by Innovac Team 2021</p></span>
     </footer>
   </body>

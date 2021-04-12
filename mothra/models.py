@@ -14,12 +14,14 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(64), unique=True, index=True)
     password_hash = db.Column(db.String(128))
     user_type=db.Column(db.String(128), default='Mothra')
+    level=db.Column(db.Integer, default=0)
 
-    def __init__(self, roll, username, password,user_type):
+    def __init__(self, roll, username, password,user_type,level):
         self.roll = roll
         self.username = username
         self.password_hash = generate_password_hash(password)
         self.user_type = user_type
+        self.level=level
 
     def check_password(self,password):
         return check_password_hash(self.password_hash,password)

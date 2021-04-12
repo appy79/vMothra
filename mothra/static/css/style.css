@@ -1,6 +1,10 @@
 html, body {
   /* IE 10-11 didn't like using min-height */
   height: 100%;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
 }
 body {
   display: flex;

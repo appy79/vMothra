@@ -1,14 +1,39 @@
 from flask import render_template, request, Blueprint, redirect, url_for, flash
 from mothra import app,db
-from flask_login import login_user, login_required, logout_user
+from flask_login import login_user, login_required, logout_user, current_user
 from mothra.models import User
 from mothra.forms import LoginForm, RegistrationForm
 
 my_view = Blueprint('my_view', __name__)
 
+def getlev():
+    if current_user.is_authenticated:
+        level=current_user.level
+        if level==0:
+            lev='Born'
+        elif level==1:
+            lev='Noob'
+        elif level==2:
+            lev='Unknown'
+        elif level==3:
+            lev='Amateur'
+        elif level==4:
+            lev='Average'
+        elif level==5:
+            lev='Working'
+        elif level==6:
+            lev='Famous'
+        else:
+            lev='Creator'
+    else:
+        lev='Non-Existent'
+
+    return lev
+
+
 @app.route('/')
 def index():
-    return render_template('home.html')
+    return render_template('home.html', lev=getlev())
 
 @app.route('/register', methods=['POST','GET'])
 def register():
@@ -18,7 +43,8 @@ def register():
         user = User(roll=form.roll.data,
                     username=form.username.data,
                     password=form.password.data,
-                    user_type=form.user_type.data)
+                    user_type=form.user_type.data,
+                    level=form.level.data)
 
         db.session.add(user)
         db.session.commit()
@@ -51,6 +77,11 @@ def logout():
 def leaderboard():
     return render_template('leaderboard.html')
 
+@app.route('/instructions')
+def instructions():
+    return render_template('instructions.html')
+
 @app.route('/noob')
+@login_required
 def noob():
     return render_template('chal_1.html')
