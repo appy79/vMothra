@@ -1,12 +1,20 @@
-from flask import render_template, request, Blueprint, redirect, url_for, flash
+from flask import render_template, request, Blueprint, redirect, url_for, flash, abort
 from mothra import app,db
 from flask_login import login_user, login_required, logout_user, current_user
 from mothra.models import User
-from mothra.forms import LoginForm, RegistrationForm
+from mothra.forms import LoginForm, RegistrationForm, SubmissionForm, AnswerFillingForm
 
 my_view = Blueprint('my_view', __name__)
 
+# COMMON FUNCTIONS AND OBJECTS
+
+
+
+
 classify=['born','noob','unknown','amateur','average','working','famous','creator','wip']
+
+# CONTEXT PROCESSOR
+
 
 @app.context_processor
 def inject_level():
@@ -20,7 +28,7 @@ def inject_level():
         return classify[1:current_user.level+2]
     return dict(getlev=getlev, clss=clss)
 
-# General Views
+# GENERAL VIEWS
 
 @app.route('/')
 def index():
@@ -72,63 +80,8 @@ def leaderboard():
 def instructions():
     return render_template('instructions.html')
 
-
-
-# CHALLENGES
-
-@app.route('/locked')
-@login_required
-def locked():
-    return render_template('locked.html')
-
 @app.route('/hunting')
 @login_required
 def hunting():
     le=current_user.level
-    return redirect(url_for(classify[le+1]))
-
-@app.route('/noob')
-@login_required
-def noob():
-    return render_template('chal_1.html')
-
-@app.route('/unknown')
-@login_required
-def unknown():
-    if current_user.level<1:
-        return redirect('locked')
-    return render_template('chal_2.html')
-
-@app.route('/amateur')
-@login_required
-def amateur():
-    if current_user.level<2:
-        return redirect('locked')
-    return render_template('chal_3.html')
-
-@app.route('/average')
-@login_required
-def average():
-    if current_user.level<3:
-        return redirect('locked')
-    return render_template('chal_4.html')
-
-@app.route('/working')
-@login_required
-def working():
-    return render_template('wip.html')
-
-@app.route('/famous')
-@login_required
-def famous():
-    return render_template('wip.html')
-
-@app.route('/creator')
-@login_required
-def creator():
-    return render_template('wip.html')
-
-@app.route('/wip')
-@login_required
-def wip():
-    return render_template('wip.html')
+    return redirect(url_for('challenges.'+classify[le+1]))

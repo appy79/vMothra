@@ -28,13 +28,18 @@
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
               {% for cl in clss() %}
-                <a class="dropdown-item" href="{{ url_for(cl) }}">{{cl}}</a>
+                <a class="dropdown-item" href="{{ url_for('challenges.'+cl) }}">{{cl}}</a>
               {% endfor %}
             </div>
           </li>
           <li class="nav-item active">
             <a class="nav-link" href="{{url_for('logout')}}">Logout</a>
           </li>
+          {% if current_user.user_type=='Godzilla' %}
+          <li class="nav-item active">
+            <a class="nav-link" href="{{url_for('godzilla.admin_dash')}}">Admin</a>
+          </li>
+          {% endif %}
           {% else %}
           <li class="nav-item active">
             <a class="nav-link" href="{{url_for('login')}}">Login</a>
@@ -44,7 +49,7 @@
           </li>
           {% endif %}
         </ul>
-          <h5 class="nav-item my-2 my-lg-0 text-white">Mothra Level : {{getlev()}}</h5>
+          <h5 class="nav-item my-2 my-lg-0 text-white">{{current_user.username}}, Mothra Level : {{getlev()}}</h5>
 
       </div>
     </nav>

@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, RadioField, IntegerField
+from wtforms import StringField, PasswordField, SubmitField, RadioField, IntegerField, TextAreaField
 from wtforms.validators import DataRequired, EqualTo, NumberRange
 from wtforms import ValidationError
 from mothra.models import User
@@ -26,3 +26,13 @@ class RegistrationForm(FlaskForm):
     def validate_username(self,username):
         if User.query.filter_by(username=self.username.data).first():
             raise ValidationError("Username already registered!")
+
+
+class AnswerFillingForm(FlaskForm):
+    stage = IntegerField('Stage')
+    ans = StringField('Answer')
+
+class SubmissionForm(FlaskForm):
+    ans = StringField('Answer', validators=[DataRequired()])
+    sub = TextAreaField('Explanation', validators=[DataRequired()])
+    submit = SubmitField('Submit')

@@ -19,7 +19,16 @@ Migrate(app,db)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = 'my_view.login'
+login_manager.login_view = 'login'
 
 from mothra.views import my_view
 app.register_blueprint(my_view)
+
+from mothra.error_pages.handlers import error_pages
+app.register_blueprint(error_pages)
+
+from mothra.challenges.views import challenges
+app.register_blueprint(challenges)
+
+from mothra.godzilla.views import godzilla
+app.register_blueprint(godzilla)
