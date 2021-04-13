@@ -6,34 +6,25 @@ from mothra.forms import LoginForm, RegistrationForm
 
 my_view = Blueprint('my_view', __name__)
 
-def getlev():
-    if current_user.is_authenticated:
-        level=current_user.level
-        if level==0:
-            lev='Born'
-        elif level==1:
-            lev='Noob'
-        elif level==2:
-            lev='Unknown'
-        elif level==3:
-            lev='Amateur'
-        elif level==4:
-            lev='Average'
-        elif level==5:
-            lev='Working'
-        elif level==6:
-            lev='Famous'
+classify=['born','noob','unknown','amateur','average','working','famous','creator','wip']
+
+@app.context_processor
+def inject_level():
+    def getlev():
+        if current_user.is_authenticated:
+            lev=classify[current_user.level]
         else:
-            lev='Creator'
-    else:
-        lev='Non-Existent'
+            lev='Non-Existent'
+        return lev
+    def clss():
+        return classify[1:current_user.level+2]
+    return dict(getlev=getlev, clss=clss)
 
-    return lev
-
+# General Views
 
 @app.route('/')
 def index():
-    return render_template('home.html', lev=getlev())
+    return render_template('home.html')
 
 @app.route('/register', methods=['POST','GET'])
 def register():
@@ -81,7 +72,63 @@ def leaderboard():
 def instructions():
     return render_template('instructions.html')
 
+
+
+# CHALLENGES
+
+@app.route('/locked')
+@login_required
+def locked():
+    return render_template('locked.html')
+
+@app.route('/hunting')
+@login_required
+def hunting():
+    le=current_user.level
+    return redirect(url_for(classify[le+1]))
+
 @app.route('/noob')
 @login_required
 def noob():
     return render_template('chal_1.html')
+
+@app.route('/unknown')
+@login_required
+def unknown():
+    if current_user.level<1:
+        return redirect('locked')
+    return render_template('chal_2.html')
+
+@app.route('/amateur')
+@login_required
+def amateur():
+    if current_user.level<2:
+        return redirect('locked')
+    return render_template('chal_3.html')
+
+@app.route('/average')
+@login_required
+def average():
+    if current_user.level<3:
+        return redirect('locked')
+    return render_template('chal_4.html')
+
+@app.route('/working')
+@login_required
+def working():
+    return render_template('wip.html')
+
+@app.route('/famous')
+@login_required
+def famous():
+    return render_template('wip.html')
+
+@app.route('/creator')
+@login_required
+def creator():
+    return render_template('wip.html')
+
+@app.route('/wip')
+@login_required
+def wip():
+    return render_template('wip.html')

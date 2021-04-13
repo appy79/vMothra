@@ -28,3 +28,8 @@ class User(db.Model, UserMixin):
 
     def __repr__(self):
         return f"{self.roll},{self.username},{self.user_type}"
+
+
+class Submission(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    by = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
