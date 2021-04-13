@@ -29,8 +29,10 @@ class RegistrationForm(FlaskForm):
 
 
 class AnswerFillingForm(FlaskForm):
-    stage = IntegerField('Stage')
-    ans = StringField('Answer')
+    stage = IntegerField('Stage', validators=[DataRequired()])
+    ans = StringField('Answer', validators=[DataRequired()])
+    submit = SubmitField('Submit')
+
 
 class SubmissionForm(FlaskForm):
     ans = StringField('Answer', validators=[DataRequired()])

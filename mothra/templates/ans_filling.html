@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
+<div class="container">
   <form method="POST">
+    {{ form.hidden_tag() }}
     <div class="form-group">
       {{ form.stage.label(class="form-group") }}
       {{form.stage(class='form-control bg-dark text-white', rows="10")  }}<br>
@@ -13,4 +15,28 @@
         {{ form.submit(class="btn btn-danger") }}
     </div>
   </form>
+  <h1 class="text-center">Correct Answers</h1>
+  <div class="table-responsive">
+    <table class="table text-white">
+      <thead>
+        <tr>
+          <th scope="col">S. No</th>
+          <th scope="col">Stage</th>
+          <th scope="col">Answer</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for stage in stages %}
+          <tr>
+            <th scope="row">{{stage.id}}</th>
+            <td>{{stage.stage}}</td>
+            <td>{{stage.ans}}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
 {% endblock %}

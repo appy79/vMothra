@@ -8,9 +8,6 @@ my_view = Blueprint('my_view', __name__)
 
 # COMMON FUNCTIONS AND OBJECTS
 
-
-
-
 classify=['born','noob','unknown','amateur','average','working','famous','creator','wip']
 
 # CONTEXT PROCESSOR
@@ -27,6 +24,8 @@ def inject_level():
     def clss():
         return classify[1:current_user.level+2]
     return dict(getlev=getlev, clss=clss)
+
+
 
 # GENERAL VIEWS
 

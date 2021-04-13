@@ -36,7 +36,13 @@ class User(db.Model, UserMixin):
 class Attempts(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     of = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    atmpts = db.Column(db.Integer, default=0)
+    stage = db.Column(db.Integer)
+    atmpts = db.Column(db.Integer, default=1)
+
+    def __init__(self):
+        self.of = current_user.id
+        self.stage = current_user.level+1
+
 
     def __repr__(self):
         return f"{self.id},{self.of},{self.atmpts}"
@@ -49,29 +55,31 @@ class Submission(db.Model):
     ans = db.Column(db.String, nullable=False)
     sub = db.Column(db.String, nullable=False)
     time = db.Column(db.DateTime, nullable=False)
-    correct = db.Column(db.Integer, default=0)
+    correct = db.Column(db.Integer)
     review = db.Column(db.String)
 
     usr = db.relationship("User", backref="by", lazy=True)
 
-    def __init__(self, sub):
+    def __init__(self, ans, sub, correct):
         self.by = current_user.id
         self.stage = current_user.level+1
+        self.ans = ans
         self.sub = sub
-        self.time = datetime.datetime.now() - start
+        self.time = datetime.now()
+        self.correct = correct
 
     def __repr__(self):
-        return f"{self.id},{self.by},{self.stage}, {self.sub}, {self.time}"
+        return f"{self.id},{self.by},{self.stage}, {self.sub}, {self.time}, {self.correct}"
 
 
-class Stages(db.Model):
+class Answer(db.Model):
     id = db.Column(db.Integer, primary_key = True)
-    stage = db.Column(db.Integer, nullable=False)
-    corans = db.Column(db.String)
+    stage = db.Column(db.Integer, nullable = False, unique=True)
+    ans = db.Column(db.String)
 
-    def __init__(self, stage, corans):
+    def __init__(self, stage, ans):
         self.stage = stage
-        self.corans = corans
+        self.ans = ans
 
     def __repr__(self):
-        return f"{self.id},{self.stage},{self.corans}"
+        return f"{self.id},{self.stage},{self.ans}"

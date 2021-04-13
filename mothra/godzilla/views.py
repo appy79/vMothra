@@ -1,7 +1,7 @@
 from flask import render_template, request, Blueprint, redirect, url_for, flash, abort
 from flask_login import current_user, login_required
 from mothra import db
-from mothra.models import User, Submission, Stages
+from mothra.models import User, Submission, Answer
 from mothra.forms import AnswerFillingForm
 
 godzilla = Blueprint('godzilla', __name__)
@@ -17,12 +17,18 @@ def admin_dash():
     return render_template('admin_dash.html')
 
 
-@godzilla.route('/corans')
+@godzilla.route('/corans', methods=['GET', 'POST'])
 @login_required
 def corans():
     godzilla_check()
     form=AnswerFillingForm()
+    stages=Answer.query.all()
     if form.validate_on_submit():
+        answer = Answer(stage=form.stage.data,
+                    ans=form.ans.data)
 
-        return redirect('ans_filling.html')
-    return render_template('ans_filling.html')
+        db.session.add(answer)
+        db.session.commit()
+        return redirect(url_for('godzilla.corans', form=form, stages=stages))
+
+    return render_template('ans_filling.html', form=form, stages=stages)
