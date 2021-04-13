@@ -13,6 +13,21 @@
       <img class="img-fluid" src="{{ url_for('static', filename='img/chal_2_2.jpg') }}" alt="">
     </div>
   </div>
+
+  <h3 class="text-center">Submission</h3>
+  <form method="POST">
+    <div class="form-group">
+      {{ form.ans.label(class="form-group") }}
+      {{form.ans(class='form-control bg-dark text-white')  }}<br>
+    </div>
+    <div class="form-group">
+      {{ form.sub.label(class="form-group") }}
+      {{form.sub(class='form-control bg-dark text-white', rows="10")  }}<br>
+    </div>
+    <div class="form-group text-center">
+        {{ form.submit(class="btn btn-danger") }}
+    </div>
+  </form>
 </div>
 
 {% endblock %}
