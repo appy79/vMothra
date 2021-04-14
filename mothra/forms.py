@@ -43,3 +43,8 @@ class SubmissionForm(FlaskForm):
 class ReviewForm(FlaskForm):
     review =RadioField('Review', choices=['Reject', 'Accept'])
     submit = SubmitField('Submit')
+
+
+class AnnounceForm(FlaskForm):
+    message = StringField('Announcement', validators=[DataRequired()])
+    submit = SubmitField('Submit')

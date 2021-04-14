@@ -1,8 +1,9 @@
 from flask import render_template, request, Blueprint, redirect, url_for, flash, abort
 from flask_login import current_user, login_required
 from mothra import db
-from mothra.models import User, Submission, Answer
-from mothra.forms import AnswerFillingForm, ReviewForm
+from mothra.models import User, Submission, Answer, Notification, Announcement
+from mothra.forms import AnswerFillingForm, ReviewForm, AnnounceForm
+from mothra.views import classify
 
 godzilla = Blueprint('godzilla', __name__)
 
@@ -46,16 +47,36 @@ def review():
 @godzilla.route('/checking_<submission_id>', methods=['GET','POST'])
 @login_required
 def checking(submission_id):
+    godzilla_check()
     form=ReviewForm()
     if form.validate_on_submit():
         submission=Submission.query.filter_by(id=submission_id).first()
         user=User.query.filter_by(id=submission.by).first()
         if form.review.data=='Accept':
             submission.correct=2
+            message = "Congratulations! Your Submission for the "+classify[user.level+1] +" submitted at "+submission.time+" upgrade has been accepted. You are now promoted to " +classify[user.level+1]
             user.level+=1
         else:
             submission.correct=0
+            message = "Oops! Your Submission for the "+classify[user.level+1] + " submitted at "+submission.time+" upgrade did not meet the requirements for the upgrade."
+
+        notification=Notification(uid=user.id, message=message)
+
+        db.session.add(notification)
 
         db.session.commit()
 
     return redirect(url_for('godzilla.review'))
+
+
+@godzilla.route('/announce', methods=['GET','POST'])
+@login_required
+def announce():
+    godzilla_check()
+    form=AnnounceForm()
+    if form.validate_on_submit():
+        announcement=Announcement(message=form.message.data)
+        db.session.add(announcement)
+        db.session.commit()
+        return redirect(url_for('godzilla.announce'))
+    return render_template('announce.html', form=form)

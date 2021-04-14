@@ -1,8 +1,9 @@
 from flask import render_template, request, Blueprint, redirect, url_for, flash, abort
 from flask_login import current_user, login_required
 from mothra import db
-from mothra.models import User, Submission, Attempts, Answer
+from mothra.models import User, Submission, Attempts, Answer, Notification, Announcement
 from mothra.forms import SubmissionForm
+from sqlalchemy import desc
 
 
 challenges = Blueprint('challenges', __name__)
@@ -31,6 +32,26 @@ def sub(form):
     db.session.commit()
 
 
+# MESSAGING
+
+@challenges.route('/notifications')
+@login_required
+def notifications():
+    notifs=Notification.query.filter_by(uid=current_user.id).all()
+    notifs.reverse()
+    return render_template('notifications.html', notifs=notifs)
+
+
+@challenges.route('/announcements')
+@login_required
+def announcements():
+    ancmts=Announcement.query.all()
+    ancmts.reverse()
+    return render_template('announcements.html', ancmts=ancmts)
+
+
+
+
 #CHALLENGE ROUTES
 
 @challenges.route('/noob', methods=['GET', 'POST'])
@@ -40,7 +61,7 @@ def noob():
     if form.validate_on_submit():
         sub(form)
         return redirect(url_for('challenges.noob', form=form))
-        
+
     return render_template('chal_1.html', form=form)
 
 @challenges.route('/unknown', methods=['GET', 'POST'])
