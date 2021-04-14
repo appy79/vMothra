@@ -17,7 +17,8 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(64), unique=True, index=True)
     password_hash = db.Column(db.String(128))
     user_type=db.Column(db.String(128), default='Mothra')
-    level=db.Column(db.Integer, default=0)
+    level = db.Column(db.Integer, default=0)
+    upgrade_time = db.Column(db.DateTime)
 
     def __init__(self, roll, username, password,user_type,level):
         self.roll = roll
@@ -25,6 +26,7 @@ class User(db.Model, UserMixin):
         self.password_hash = generate_password_hash(password)
         self.user_type = user_type
         self.level=level
+        self.upgrade_time=datetime.now()
 
     def check_password(self,password):
         return check_password_hash(self.password_hash,password)
@@ -83,3 +85,27 @@ class Answer(db.Model):
 
     def __repr__(self):
         return f"{self.id},{self.stage},{self.ans}"
+
+
+class Notification(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    uid = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    message = db.Column(db.String, nullable=False)
+
+    def __init__(self, uid, message):
+        self.uid=uid
+        self.message=message
+
+    def __repr__(self):
+        return f"{self.id},{self.uid},{self.message}"
+
+
+class Announcement(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    message = db.Column(db.String, nullable=False)
+
+    def __init__(self, message):
+        self.message=message
+
+    def __repr__(self):
+        return f"{self.id}, {self.message}"

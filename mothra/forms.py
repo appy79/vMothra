@@ -38,3 +38,8 @@ class SubmissionForm(FlaskForm):
     ans = StringField('Answer', validators=[DataRequired()])
     sub = TextAreaField('Explanation', validators=[DataRequired()])
     submit = SubmitField('Submit')
+
+
+class ReviewForm(FlaskForm):
+    review =RadioField('Review', choices=['Reject', 'Accept'])
+    submit = SubmitField('Submit')

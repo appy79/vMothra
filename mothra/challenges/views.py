@@ -40,7 +40,7 @@ def noob():
     if form.validate_on_submit():
         sub(form)
         return redirect(url_for('challenges.noob', form=form))
-
+        
     return render_template('chal_1.html', form=form)
 
 @challenges.route('/unknown', methods=['GET', 'POST'])
@@ -103,7 +103,7 @@ def famous():
 def creator():
     if current_user.level<6:
         abort(403)
-        
+
     return render_template('wip.html')
 
 @challenges.route('/wip', methods=['GET', 'POST'])

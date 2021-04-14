@@ -26,7 +26,7 @@
             <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               My Stages
             </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <div class="dropdown-menu bg-info text-center" aria-labelledby="navbarDropdown">
               {% for cl in clss() %}
                 <a class="dropdown-item" href="{{ url_for('challenges.'+cl) }}">{{cl}}</a>
               {% endfor %}
