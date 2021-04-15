@@ -67,7 +67,7 @@ def noob():
         sub(form)
         return redirect(url_for('challenges.noob', form=form))
 
-    return render_template('chal_1.html', form=form)
+    return render_template('challenges/chal_1.html', form=form)
 
 @challenges.route('/unknown', methods=['GET', 'POST'])
 @login_required
@@ -80,7 +80,7 @@ def unknown():
         sub(form)
         return redirect(url_for('challenges.noob', form=form))
 
-    return render_template('chal_2.html', form=form)
+    return render_template('challenges/chal_2.html', form=form)
 
 @challenges.route('/amateur', methods=['GET', 'POST'])
 @login_required
@@ -93,7 +93,7 @@ def amateur():
         sub(form)
         return redirect(url_for('challenges.noob', form=form))
 
-    return render_template('chal_3.html', form=form)
+    return render_template('challenges/chal_3.html', form=form)
 
 @challenges.route('/average', methods=['GET', 'POST'])
 @login_required
@@ -106,7 +106,7 @@ def average():
         sub(form)
         return redirect(url_for('challenges.noob', form=form))
 
-    return render_template('chal_4.html', form=form)
+    return render_template('challenges/chal_4.html', form=form)
 
 @challenges.route('/working', methods=['GET', 'POST'])
 @login_required

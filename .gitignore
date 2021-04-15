@@ -1,5 +1,5 @@
-/venv
+venv/
 *.sqlite
 .DS_Store
 __pycache__
-/migrations
+migrations/

@@ -15,7 +15,7 @@ def godzilla_check():
 @login_required
 def admin_dash():
     godzilla_check()
-    return render_template('admin_dash.html')
+    return render_template('godzilla/admin_dash.html')
 
 
 @godzilla.route('/corans', methods=['GET', 'POST'])
@@ -32,7 +32,7 @@ def corans():
         db.session.commit()
         return redirect(url_for('godzilla.corans', form=form, stages=stages))
 
-    return render_template('ans_filling.html', form=form, stages=stages)
+    return render_template('godzilla/ans_filling.html', form=form, stages=stages)
 
 
 @godzilla.route('/review', methods=['GET','POST'])
@@ -42,7 +42,7 @@ def review():
     form=ReviewForm()
     submissions = Submission.query.filter_by(correct=1).all()
 
-    return render_template('review.html', submissions=submissions, form=form)
+    return render_template('godzilla/review.html', submissions=submissions, form=form)
 
 @godzilla.route('/checking_<submission_id>', methods=['GET','POST'])
 @login_required
@@ -79,4 +79,4 @@ def announce():
         db.session.add(announcement)
         db.session.commit()
         return redirect(url_for('godzilla.announce'))
-    return render_template('announce.html', form=form)
+    return render_template('godzilla/announce.html', form=form)
