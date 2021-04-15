@@ -54,11 +54,11 @@ def checking(submission_id):
         user=User.query.filter_by(id=submission.by).first()
         if form.review.data=='Accept':
             submission.correct=2
-            message = "Congratulations! Your Submission for the "+classify[user.level+1] +" submitted at "+submission.time+" upgrade has been accepted. You are now promoted to " +classify[user.level+1]
+            message = "Congratulations! Your Submission for the "+classify[user.level+1] +" upgrade submitted at "+str(submission.time)+" has been accepted. You are now promoted to " +classify[user.level+1]
             user.level+=1
         else:
             submission.correct=0
-            message = "Oops! Your Submission for the "+classify[user.level+1] + " submitted at "+submission.time+" upgrade did not meet the requirements for the upgrade."
+            message = "Oops! Your Submission for the "+classify[user.level+1] + " upgrade submitted at "+str(submission.time)+" did not meet the requirements for the upgrade."
 
         notification=Notification(uid=user.id, message=message)
 

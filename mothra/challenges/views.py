@@ -3,7 +3,8 @@ from flask_login import current_user, login_required
 from mothra import db
 from mothra.models import User, Submission, Attempts, Answer, Notification, Announcement
 from mothra.forms import SubmissionForm
-from sqlalchemy import desc
+from mothra.views import classify
+from datetime import datetime
 
 
 challenges = Blueprint('challenges', __name__)
@@ -24,11 +25,15 @@ def sub(form):
     corans=Answer.query.filter_by(stage=current_user.level+1).first()
     if ans!=corans.ans:
         correct=0
+        message = "Oops! Your Submission for the "+classify[current_user.level+1] + " upgrade submitted at "+str(datetime.now())+" has been auto rejected because your answer was incorrect."
     else:
         correct=1
+        message = "Your Submission for the "+classify[current_user.level+1] + " upgrade submitted at "+str(datetime.now())+" has been sent for review. Please wait for some time."
     sub=form.sub.data
     submission=Submission(ans=ans, sub=sub, correct=correct)
+    notification=Notification(uid=current_user.id, message=message)
     db.session.add(submission)
+    db.session.add(notification)
     db.session.commit()
 
 

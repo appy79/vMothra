@@ -1,20 +1,17 @@
 {% extends "base.html" %}
 {% block content %}
 
-
-<div class="row">
-  <div class="col-sm text-center">
-    <img class="img-fluid" style="max-width:75%; padding:10%" src="{{ url_for('static', filename='img/nit.png') }}" alt="">
-  </div>
-  <div class="col-sm">
-    <div class="text-center">
-      <img class="img-fluid" src="{{ url_for('static', filename='img/wip.gif') }}" alt="">
-    </div>
-  </div>
-  <div class="col-sm text-center">
-    <img class="img-fluid" src="{{ url_for('static', filename='img/pccl.png') }}" alt="">
-  </div>
+<div class="text-center">
+  <img src="{{ url_for('static', filename='img/nit.png') }}" class="float-left" style="padding-left:5%" alt="...">
+  <img src="{{ url_for('static', filename='img/pccl.png') }}" class="float-right" style="padding-right:5%;" alt="...">
 </div>
+
+<div class="container text-center">
+  <img class="img-fluid" style="margin-top:-6%" src="{{ url_for('static', filename='img/wip.gif') }}" alt="">
+</div>
+
+
+
   <div class="row">
     <div class="col-sm">
       <a href="{{ url_for('instructions') }}" class="btn btn-danger btn-lg active btn-block" role="button" aria-pressed="true">Instructions</a>

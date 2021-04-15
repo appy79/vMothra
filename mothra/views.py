@@ -53,7 +53,7 @@ def register():
 def login():
     form=LoginForm()
     if form.validate_on_submit():
-        user=User.query.filter_by(roll=form.roll.data).first()
+        user=User.query.filter_by(roll=form.roll.data).first_or_404()
         if user.check_password(form.password.data) and user is not None:
             login_user(user)
             next=request.args.get('next')
