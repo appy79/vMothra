@@ -46,6 +46,7 @@ def register():
 
         db.session.add(user)
         db.session.commit()
+        flash("Thank you for registering " +form.username.data+ ". Please login.")
         return redirect(url_for('login'))
     return render_template('register.html', form=form)
 
@@ -73,7 +74,8 @@ def logout():
 
 @app.route('/leaderboard')
 def leaderboard():
-    return render_template('leaderboard.html')
+    users=User.query.filter_by(user_type='Mothra').order_by(User.level.desc(), User.upgrade_time.asc()).all()
+    return render_template('leaderboard.html', users=users)
 
 @app.route('/instructions')
 def instructions():

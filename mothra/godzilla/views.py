@@ -4,6 +4,7 @@ from mothra import db
 from mothra.models import User, Submission, Answer, Notification, Announcement
 from mothra.forms import AnswerFillingForm, ReviewForm, AnnounceForm
 from mothra.views import classify
+from datetime import datetime
 
 godzilla = Blueprint('godzilla', __name__)
 
@@ -56,6 +57,7 @@ def checking(submission_id):
             submission.correct=2
             message = "Congratulations! Your Submission for the "+classify[user.level+1] +" upgrade submitted at "+str(submission.time)+" has been accepted. You are now promoted to " +classify[user.level+1]
             user.level+=1
+            user.upgrade_time=datetime.now()
         else:
             submission.correct=0
             message = "Oops! Your Submission for the "+classify[user.level+1] + " upgrade submitted at "+str(submission.time)+" did not meet the requirements for the upgrade."

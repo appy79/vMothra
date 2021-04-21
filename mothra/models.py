@@ -32,7 +32,7 @@ class User(db.Model, UserMixin):
         return check_password_hash(self.password_hash,password)
 
     def __repr__(self):
-        return f"{self.roll},{self.username},{self.user_type}, {self.level}"
+        return f"{self.roll},{self.username},{self.user_type}, {self.level}, {self.upgrade_time}"
 
 
 class Attempts(db.Model):
