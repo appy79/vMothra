@@ -20,7 +20,12 @@ body {
   padding: 0px;
 }
 
-.chal_4{
-  margin-top: 10%;
-  margin-bottom: 10%;
+.blink_me {
+  animation: blinker 1s linear infinite;
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
 }

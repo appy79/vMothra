@@ -1,7 +1,7 @@
 from flask import render_template, request, Blueprint, redirect, url_for, flash, abort
 from mothra import app,db
 from flask_login import login_user, login_required, logout_user, current_user
-from mothra.models import User
+from mothra.models import User, Notification, Announcement
 from mothra.forms import LoginForm, RegistrationForm, SubmissionForm, AnswerFillingForm
 
 my_view = Blueprint('my_view', __name__)
@@ -21,9 +21,22 @@ def inject_level():
         else:
             lev='Non-Existent'
         return lev
+
     def clss():
         return classify[1:current_user.level+2]
-    return dict(getlev=getlev, clss=clss)
+
+    def show():
+        return classify
+
+    def unread():
+        count=Notification.query.filter_by(uid=current_user.id).count()
+        if count!=current_user.notif_count:
+            notifs=count-current_user.notif_count
+        else:
+            notifs=0
+        return notifs
+
+    return dict(getlev=getlev, clss=clss, show=show, unread=unread)
 
 
 
@@ -31,7 +44,8 @@ def inject_level():
 
 @app.route('/')
 def index():
-    return render_template('home.html')
+    announcement=Announcement.query.order_by(Announcement.id.desc()).first()
+    return render_template('home.html', announcement=announcement)
 
 @app.route('/register', methods=['POST','GET'])
 def register():

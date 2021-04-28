@@ -1,7 +1,7 @@
 from flask import render_template, request, Blueprint, redirect, url_for, flash, abort
 from flask_login import current_user, login_required
 from mothra import db
-from mothra.models import User, Submission, Answer, Notification, Announcement
+from mothra.models import User, Submission, Answer, Notification, Announcement, Stats
 from mothra.forms import AnswerFillingForm, ReviewForm, AnnounceForm
 from mothra.views import classify
 from datetime import datetime
@@ -48,6 +48,7 @@ def review():
 @godzilla.route('/checking_<submission_id>', methods=['GET','POST'])
 @login_required
 def checking(submission_id):
+    now=datetime.now()
     godzilla_check()
     form=ReviewForm()
     if form.validate_on_submit():
@@ -55,12 +56,17 @@ def checking(submission_id):
         user=User.query.filter_by(id=submission.by).first()
         if form.review.data=='Accept':
             submission.correct=2
-            message = "Congratulations! Your Submission for the "+classify[user.level+1] +" upgrade submitted at "+str(submission.time)+" has been accepted. You are now promoted to " +classify[user.level+1]
-            user.level+=1
-            user.upgrade_time=datetime.now()
+            if user.level==submission.stage:
+                message="Your Submission for the "+classify[user.level] +" upgrade on "+now.strftime("%d %b %Y at %I:%M %p")+" has been rejected because one of your previous submissions for this upgrade have been accepted."
+            else:
+                message = "Congratulations! Your Submission for the "+classify[user.level+1] +" upgrade on "+now.strftime("%d %b %Y at %I:%M %p")+" has been accepted. You are now promoted to " +classify[user.level+1]
+                user.level=submission.stage
+                user.upgrade_time=submission.time
+                stat=Stats(uid=user.id, level=user.level, uptime=submission.time)
+                db.session.add(stat)
         else:
             submission.correct=0
-            message = "Oops! Your Submission for the "+classify[user.level+1] + " upgrade submitted at "+str(submission.time)+" did not meet the requirements for the upgrade."
+            message = "Oops! Your Submission for the "+classify[user.level+1] + " upgrade on "+now.strftime("%d %b %Y at %I:%M %p")+" did not meet the requirements for the upgrade."
 
         notification=Notification(uid=user.id, message=message)
 

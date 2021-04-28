@@ -14,6 +14,7 @@
     </div>
   </div>
 
+  {% if current_user.level==2 or current_user.user_type=="Godzilla" %}
   <h3 class="text-center">Submission</h3>
   <form method="POST">
     {{ form.hidden_tag() }}
@@ -29,6 +30,12 @@
         {{ form.submit(class="btn btn-danger") }}
     </div>
   </form>
+
+  {% else %}
+  <div class="text-center" style="margin-top:10%">
+    <h3>Cleared on {{ stats.uptime.strftime("%d %b %Y at %I:%M %p") }}</h3>
+  </div>
+  {% endif %}
 </div>
 
 {% endblock %}

@@ -19,6 +19,7 @@ class User(db.Model, UserMixin):
     user_type=db.Column(db.String(128), default='Mothra')
     level = db.Column(db.Integer, default=0)
     upgrade_time = db.Column(db.DateTime)
+    notif_count = db.Column(db.Integer, default=0)
 
     def __init__(self, roll, username, password,user_type,level):
         self.roll = roll
@@ -109,3 +110,18 @@ class Announcement(db.Model):
 
     def __repr__(self):
         return f"{self.id}, {self.message}"
+
+
+class Stats(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    uid = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    level = db.Column(db.Integer, nullable=False)
+    uptime = db.Column(db.DateTime, nullable=False)
+
+    def __init__(self, uid, level, uptime):
+        self.uid = uid
+        self.level = level
+        self.uptime = uptime
+
+    def __repr__():
+        return f"{self.uid}, {self.level}, {self.uptime}"

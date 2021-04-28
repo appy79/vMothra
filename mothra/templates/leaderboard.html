@@ -19,7 +19,7 @@
           <td>{{rank.value}}</td>
           <td>{{user.roll}}</td>
           <td>{{user.username}}</td>
-          <td>{{user.level}}</td>
+          <td>{{show()[user.level]}}</td>
         </tr>
       {% set rank.value=rank.value+1 %}
       {% endfor %}

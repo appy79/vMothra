@@ -10,6 +10,11 @@
   <img class="img-fluid zoomin" src="{{ url_for('static', filename='img/wip.gif') }}" alt="">
 </div>
 
+<div class="container">
+  <marquee style="font-size:150%; margin:2%" scrollamount="20">
+    {{announcement.message}}
+  </marquee>
+</div>
 
 <div class="container">
   <div class="row">
