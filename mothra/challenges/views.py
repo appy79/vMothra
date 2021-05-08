@@ -6,6 +6,8 @@ from mothra.forms import SubmissionForm
 from mothra.views import classify
 from datetime import datetime
 
+start=datetime(2021, 5, 11, 12, 00, 00 )
+end=datetime(2021, 5, 8, 12, 00, 00)
 
 challenges = Blueprint('challenges', __name__)
 
@@ -13,6 +15,9 @@ challenges = Blueprint('challenges', __name__)
 
 def sub(form):
     now=datetime.now()
+    if now>end:
+        flash("The submission time is over. No new answers will be accepted.")
+        return redirect(url_for("index"))
     att=Attempts.query.filter_by(of=current_user.id, stage= current_user.level+1).first()
     if att:
         if att.atmpts==3:
@@ -67,6 +72,9 @@ def announcements():
 @challenges.route('/noob', methods=['GET', 'POST'])
 @login_required
 def noob():
+    if datetime.now()<start and current_user.user_type!="Godzilla":
+        flash("Event has not yet started.")
+        return redirect(url_for("index"))
     if current_user.level>0 and current_user.user_type!="Godzilla":
         stats=Stats.query.filter_by(level=1, uid=current_user.id).first()
         return render_template('challenges/chal_1.html', stats=stats)

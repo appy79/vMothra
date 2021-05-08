@@ -4,7 +4,6 @@ from flask_login import login_user, login_required, logout_user, current_user
 from mothra.models import User, Notification, Announcement
 from mothra.forms import LoginForm, RegistrationForm, SubmissionForm, AnswerFillingForm
 
-my_view = Blueprint('my_view', __name__)
 
 # COMMON FUNCTIONS AND OBJECTS
 
