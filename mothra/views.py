@@ -90,7 +90,9 @@ def logout():
 
 @app.route('/leaderboard')
 def leaderboard():
-    if datetime.now()<end and current_user.user_type!="Godzilla":
+    if datetime.now()<end and current_user.is_anonymous:
+        return render_template("lead_wait.html")
+    elif datetime.now()<end and current_user.user_type!="Godzilla":
         return render_template("lead_wait.html")
     users=User.query.filter_by(user_type='Mothra').order_by(User.level.desc(), User.upgrade_time.asc()).all()
     return render_template('leaderboard.html', users=users)
