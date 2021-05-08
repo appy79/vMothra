@@ -6,8 +6,8 @@ from mothra.forms import SubmissionForm
 from mothra.views import classify
 from datetime import datetime
 
-start=datetime(2021, 5, 11, 12, 00, 00 )
-end=datetime(2021, 5, 8, 12, 00, 00)
+start=datetime(2021, 5, 8, 12, 00, 00 )
+end=datetime(2021, 5, 13, 12, 00, 00)
 
 challenges = Blueprint('challenges', __name__)
 
@@ -142,7 +142,16 @@ def working():
     if current_user.level<4:
         abort(403)
 
-    return render_template('wip.html')
+    elif current_user.level>4 and current_user.user_type!="Godzilla":
+        stats=Stats.query.filter_by(level=5, uid=current_user.id).first()
+        return render_template('challenges/chal_5.html', stats=stats)
+    else:
+        form=SubmissionForm()
+        if form.validate_on_submit():
+            sub(form)
+            return redirect(url_for('challenges.working', form=form))
+
+        return render_template('challenges/chal_5.html', form=form)
 
 @challenges.route('/famous', methods=['GET', 'POST'])
 @login_required
@@ -150,7 +159,16 @@ def famous():
     if current_user.level<5:
         abort(403)
 
-    return render_template('wip.html')
+    elif current_user.level>5 and current_user.user_type!="Godzilla":
+        stats=Stats.query.filter_by(level=6, uid=current_user.id).first()
+        return render_template('challenges/chal_6.html', stats=stats)
+    else:
+        form=SubmissionForm()
+        if form.validate_on_submit():
+            sub(form)
+            return redirect(url_for('challenges.famous', form=form))
+
+        return render_template('challenges/chal_6.html', form=form)
 
 @challenges.route('/creator', methods=['GET', 'POST'])
 @login_required
@@ -158,7 +176,16 @@ def creator():
     if current_user.level<6:
         abort(403)
 
-    return render_template('wip.html')
+    elif current_user.level>6 and current_user.user_type!="Godzilla":
+        stats=Stats.query.filter_by(level=7, uid=current_user.id).first()
+        return render_template('challenges/chal_7.html', stats=stats)
+    else:
+        form=SubmissionForm()
+        if form.validate_on_submit():
+            sub(form)
+            return redirect(url_for('challenges.creator', form=form))
+
+        return render_template('challenges/chal_7.html', form=form)
 
 @challenges.route('/wip', methods=['GET', 'POST'])
 @login_required

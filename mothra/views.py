@@ -3,7 +3,10 @@ from mothra import app,db
 from flask_login import login_user, login_required, logout_user, current_user
 from mothra.models import User, Notification, Announcement
 from mothra.forms import LoginForm, RegistrationForm, SubmissionForm, AnswerFillingForm
+from datetime import datetime
 
+start=datetime(2021, 5, 11, 12, 00, 00 )
+end=datetime(2021, 5, 13, 12, 00, 00)
 
 # COMMON FUNCTIONS AND OBJECTS
 
@@ -87,6 +90,8 @@ def logout():
 
 @app.route('/leaderboard')
 def leaderboard():
+    if datetime.now()<end and current_user.user_type!="Godzilla":
+        return render_template("lead_wait.html")
     users=User.query.filter_by(user_type='Mothra').order_by(User.level.desc(), User.upgrade_time.asc()).all()
     return render_template('leaderboard.html', users=users)
 
