@@ -4,26 +4,33 @@
 <div class="container">
   <div class="text-center">
     <img class="img-fluid" src="{{ url_for('static', filename='img/yas.gif') }}" alt="">
-    <h2>The End. Thank you for your participation.</h2>
+    <h2>The End. Thank you for your participation. Results will be out soon. </h2>
   </div>
 
   {% if current_user.level==6 or current_user.user_type=="Godzilla" %}
-  <!-- <h3 class="text-center">Submission</h3>
-  <form method="POST">
-    {{ form.hidden_tag() }}
-    <div class="form-group">
-      {{ form.ans.label(class="form-group") }}
-      {{form.ans(class='form-control bg-dark text-white')  }}<br>
-    </div>
-    <div class="form-group">
-      {{ form.sub.label(class="form-group") }}
-      {{form.sub(class='form-control bg-dark text-white', rows="10")  }}<br>
-    </div>
-    <div class="form-group text-center">
-        {{ form.submit(class="btn btn-danger") }}
-    </div>
-  </form>
-  -->
+  <div class="create" style="visibility:hidden; margin-top:-50%;">
+    <h3 class="text-center">Submission</h3>
+    {% if attempts %}
+<h4 class="text-center">Attempts Remaining --> {{ att-attempts.atmpts }}</h4>
+{% else %}
+<h4 class="text-center">Attempts Remaining --> {{ att }}</h4>
+{% endif %}
+    <form method="POST">
+      {{ form.hidden_tag() }}
+      <div class="form-group">
+        {{ form.ans.label(class="form-group") }}
+        {{form.ans(class='form-control bg-dark text-white')  }}<br>
+      </div>
+      <div class="form-group">
+        {{ form.sub.label(class="form-group") }}
+        {{form.sub(class='form-control bg-dark text-white', rows="10")  }}<br>
+      </div>
+      <div class="form-group text-center">
+          {{ form.submit(class="btn btn-danger") }}
+      </div>
+    </form>
+  </div>
+
   {% else %}
   <div class="text-center" style="margin-top:10%">
     <h3>Cleared on {{ stats.uptime.strftime("%d %b %Y at %I:%M %p") }}</h3>

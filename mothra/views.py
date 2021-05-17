@@ -1,12 +1,9 @@
 from flask import render_template, request, Blueprint, redirect, url_for, flash, abort
-from mothra import app,db
+from mothra import app, db, inno_end, start, end
 from flask_login import login_user, login_required, logout_user, current_user
-from mothra.models import User, Notification, Announcement
-from mothra.forms import LoginForm, RegistrationForm, SubmissionForm, AnswerFillingForm
+from mothra.models import User, Notification, Announcement, Feedback
+from mothra.forms import LoginForm, RegistrationForm, SubmissionForm, AnswerFillingForm, FeedbackForm
 from datetime import datetime
-
-start=datetime(2021, 5, 11, 12, 00, 00 )
-end=datetime(2021, 5, 13, 12, 00, 00)
 
 # COMMON FUNCTIONS AND OBJECTS
 
@@ -38,7 +35,7 @@ def inject_level():
             notifs=0
         return notifs
 
-    return dict(getlev=getlev, clss=clss, show=show, unread=unread)
+    return dict(getlev=getlev, clss=clss, show=show, unread=unread, time=datetime.now(), start=start, end=end)
 
 
 
@@ -46,8 +43,9 @@ def inject_level():
 
 @app.route('/')
 def index():
+    now = datetime.now()
     announcement=Announcement.query.order_by(Announcement.id.desc()).first()
-    return render_template('home.html', announcement=announcement)
+    return render_template('home.html', announcement=announcement, now=now)
 
 @app.route('/register', methods=['POST','GET'])
 def register():
@@ -56,9 +54,8 @@ def register():
     if form.validate_on_submit():
         user = User(roll=form.roll.data,
                     username=form.username.data,
-                    password=form.password.data,
-                    user_type=form.user_type.data,
-                    level=form.level.data)
+                    password=form.password.data
+                    )
 
         db.session.add(user)
         db.session.commit()
@@ -70,16 +67,21 @@ def register():
 def login():
     form=LoginForm()
     if form.validate_on_submit():
-        user=User.query.filter_by(roll=form.roll.data).first_or_404()
-        if user.check_password(form.password.data) and user is not None:
-            login_user(user)
-            next=request.args.get('next')
-            if next==None or not not next[0]=='/':
-                next=url_for('index')
-            return redirect(next)
+        user=User.query.filter_by(roll=form.roll.data).first()
+        if user:
+            if user.check_password(form.password.data):
+                login_user(user)
+                next=request.args.get('next')
+                if next==None or not not next[0]=='/':
+                    next=url_for('index')
+                flash("Login Successful")
+                return redirect(next)
+
+            else:
+                flash("Password is incorrect.")
 
         else:
-            flash("Username or Password is incorrect!")
+            flash("Roll number does not exist.")
     return render_template('login.html', form=form)
 
 @app.route('/logout')
@@ -90,11 +92,11 @@ def logout():
 
 @app.route('/leaderboard')
 def leaderboard():
-    if datetime.now()<end and current_user.is_anonymous:
+    if datetime.now()<inno_end and current_user.is_anonymous:
         return render_template("lead_wait.html")
-    elif datetime.now()<end and current_user.user_type!="Godzilla":
+    elif datetime.now()<inno_end and current_user.user_type!="Godzilla":
         return render_template("lead_wait.html")
-    users=User.query.filter_by(user_type='Mothra').order_by(User.level.desc(), User.upgrade_time.asc()).all()
+    users=User.query.order_by(User.level.desc(), User.upgrade_time.asc()).all()
     return render_template('leaderboard.html', users=users)
 
 @app.route('/instructions')
@@ -106,3 +108,22 @@ def instructions():
 def hunting():
     le=current_user.level
     return redirect(url_for('challenges.'+classify[le+1]))
+
+
+@app.route('/feedback', methods=['GET', 'POST'])
+@login_required
+def feedback():
+    if datetime.now()<end:
+        flash("The feedback form will be available after the event ends.")
+        return redirect(url_for('index'))
+        
+    form = FeedbackForm()
+
+    if form.validate_on_submit():
+        back = Feedback(rating = form.rating.data, feed = form.feed.data)
+        db.session.add(back)
+        db.session.commit()
+        flash("Thank you for your valuable feedback.")
+        return redirect(url_for("index"))
+
+    return render_template("feedback.html", form = form)

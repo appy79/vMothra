@@ -96,6 +96,11 @@
       </div>
 {% if current_user.level==0 or current_user.user_type=="Godzilla" %}
 <h3 class="text-center">Submission</h3>
+{% if attempts %}
+<h4 class="text-center">Attempts Remaining --> {{ att-attempts.atmpts }}</h4>
+{% else %}
+<h4 class="text-center">Attempts Remaining --> {{ att }}</h4>
+{% endif %}
 <form method="POST">
   {{ form.hidden_tag() }}
   <div class="form-group">

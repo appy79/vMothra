@@ -4,11 +4,16 @@
 <div class="container">
   <div class="text-center">
     <h1>The Working Upgrade</h1>
-    <h2>10*7?48-24?181+11</h2>
+    <h2>10*7/48-24/181+11</h2>
   </div>
 
   {% if current_user.level==4 or current_user.user_type=="Godzilla" %}
   <h3 class="text-center">Submission</h3>
+  {% if attempts %}
+<h4 class="text-center">Attempts Remaining --> {{ att-attempts.atmpts }}</h4>
+{% else %}
+<h4 class="text-center">Attempts Remaining --> {{ att }}</h4>
+{% endif %}
   <form method="POST">
     {{ form.hidden_tag() }}
     <div class="form-group">

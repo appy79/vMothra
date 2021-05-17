@@ -2,6 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, RadioField, IntegerField, TextAreaField
 from wtforms.validators import DataRequired, EqualTo, NumberRange
 from wtforms import ValidationError
+from wtforms.fields.html5 import DecimalRangeField
 from mothra.models import User
 
 class LoginForm(FlaskForm):
@@ -11,12 +12,10 @@ class LoginForm(FlaskForm):
 
 
 class RegistrationForm(FlaskForm):
-    roll = IntegerField('Roll Number', validators=[DataRequired(),NumberRange(min=205120001, max=205120113, message="Only MCA 2023 batch can register for now")])
+    roll = IntegerField('Roll Number', validators=[DataRequired()])
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired(), EqualTo('pass_confirm', message="Passwords must Match!")])
     pass_confirm = PasswordField('Confirm Password', validators=[DataRequired()])
-    user_type=RadioField('User Type', choices=['Godzilla', 'Mothra'])
-    level=IntegerField('Level')
     submit = SubmitField('Register')
 
     def validate_roll(self,roll):
@@ -47,4 +46,14 @@ class ReviewForm(FlaskForm):
 
 class AnnounceForm(FlaskForm):
     message = StringField('Announcement', validators=[DataRequired()])
+    submit = SubmitField('Submit')
+
+class NotifForm(FlaskForm):
+    uid=IntegerField('User ID',  validators=[DataRequired()])
+    message = StringField('Notification', validators=[DataRequired()])
+    submit = SubmitField('Submit')
+
+class FeedbackForm(FlaskForm):
+    rating = DecimalRangeField('Rating', validators=[DataRequired()], default=50)
+    feed = TextAreaField('Feedback', validators=[DataRequired()])
     submit = SubmitField('Submit')

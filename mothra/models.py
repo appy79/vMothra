@@ -21,19 +21,17 @@ class User(db.Model, UserMixin):
     upgrade_time = db.Column(db.DateTime)
     notif_count = db.Column(db.Integer, default=0)
 
-    def __init__(self, roll, username, password,user_type,level):
+    def __init__(self, roll, username, password):
         self.roll = roll
         self.username = username
         self.password_hash = generate_password_hash(password)
-        self.user_type = user_type
-        self.level=level
         self.upgrade_time=datetime.now()
 
     def check_password(self,password):
         return check_password_hash(self.password_hash,password)
 
     def __repr__(self):
-        return f"{self.roll},{self.username},{self.user_type}, {self.level}, {self.upgrade_time}"
+        return f"{self.id}, {self.roll}, {self.username}"
 
 
 class Attempts(db.Model):
@@ -125,3 +123,18 @@ class Stats(db.Model):
 
     def __repr__():
         return f"{self.uid}, {self.level}, {self.uptime}"
+
+
+class Feedback(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    uid = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    rating = db.Column(db.Integer, nullable=False)
+    feed = db.Column(db.String, nullable=False)
+
+    def __init__(self, rating, feed):
+        self.uid = current_user.id
+        self.rating = int(rating)
+        self.feed = feed
+
+    def __repr__():
+        return f"{self.uid}, {self.rating}, {self.feed}"

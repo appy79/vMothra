@@ -1,8 +1,8 @@
 from flask import render_template, request, Blueprint, redirect, url_for, flash, abort
 from flask_login import current_user, login_required
 from mothra import db
-from mothra.models import User, Submission, Answer, Notification, Announcement, Stats
-from mothra.forms import AnswerFillingForm, ReviewForm, AnnounceForm
+from mothra.models import User, Submission, Answer, Notification, Announcement, Stats, Feedback
+from mothra.forms import AnswerFillingForm, ReviewForm, AnnounceForm, NotifForm
 from mothra.views import classify
 from datetime import datetime
 
@@ -42,8 +42,9 @@ def review():
     godzilla_check()
     form=ReviewForm()
     submissions = Submission.query.filter_by(correct=1).all()
+    users=User.query.all()
 
-    return render_template('godzilla/review.html', submissions=submissions, form=form)
+    return render_template('godzilla/review.html', submissions=submissions, form=form, users=users)
 
 @godzilla.route('/checking_<submission_id>', methods=['GET','POST'])
 @login_required
@@ -88,3 +89,43 @@ def announce():
         db.session.commit()
         return redirect(url_for('godzilla.announce'))
     return render_template('godzilla/announce.html', form=form)
+
+
+@godzilla.route('/all_users')
+@login_required
+def all_users():
+    godzilla_check()
+    users=User.query.order_by(User.id.asc()).all()
+    return render_template('godzilla/users.html', users=users)
+
+
+@godzilla.route('/dnotif', methods=['GET','POST'])
+@login_required
+def dnotif():
+    godzilla_check()
+    form=NotifForm()
+    if form.validate_on_submit():
+        notif=Notification(uid=form.uid.data, message=form.message.data)
+        db.session.add(notif)
+        db.session.commit()
+        return redirect(url_for('godzilla.dnotif'))
+    return render_template('godzilla/dnotif.html', form=form)
+
+
+
+@godzilla.route('/all_subs')
+@login_required
+def all_subs():
+    godzilla_check()
+    submissions = Submission.query.order_by(Submission.time.desc()).all()
+    users=User.query.all()
+    return render_template('godzilla/all_subs.html', submissions=submissions, users=users)
+
+
+@godzilla.route('/all_feeds')
+@login_required
+def all_feeds():
+    godzilla_check()
+    feedbacks = Feedback.query.order_by(Feedback.id.desc()).all()
+    users=User.query.all()
+    return render_template('godzilla/all_feeds.html', feedbacks=feedbacks, users=users)

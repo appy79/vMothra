@@ -1,26 +1,26 @@
 from flask import render_template, request, Blueprint, redirect, url_for, flash, abort
 from flask_login import current_user, login_required
-from mothra import db
+from mothra import db, start, end
 from mothra.models import User, Submission, Attempts, Answer, Notification, Announcement, Stats
 from mothra.forms import SubmissionForm
 from mothra.views import classify
 from datetime import datetime
 
-start=datetime(2021, 5, 8, 12, 00, 00 )
-end=datetime(2021, 5, 13, 12, 00, 00)
+
 
 challenges = Blueprint('challenges', __name__)
 
 # SUBMISSION HANDLING
 
-def sub(form):
+def sub(form, attemp):
     now=datetime.now()
     if now>end:
         flash("The submission time is over. No new answers will be accepted.")
         return redirect(url_for("index"))
     att=Attempts.query.filter_by(of=current_user.id, stage= current_user.level+1).first()
     if att:
-        if att.atmpts==3:
+        if att.atmpts>=attemp:
+            flash("You have exhausted your number of attempts at this problem.")
             abort(403)
         else:
             att.atmpts+=1
@@ -80,11 +80,13 @@ def noob():
         return render_template('challenges/chal_1.html', stats=stats)
     else:
         form=SubmissionForm()
+        att=7
+        attempts=Attempts.query.filter_by(of=current_user.id, stage=1).first()
         if form.validate_on_submit():
-            sub(form)
-            return redirect(url_for('challenges.noob', form=form))
+            sub(form, att)
+            return redirect(url_for('challenges.noob'))
 
-        return render_template('challenges/chal_1.html', form=form)
+        return render_template('challenges/chal_1.html', form=form, attempts=attempts, att=att)
 
 @challenges.route('/unknown', methods=['GET', 'POST'])
 @login_required
@@ -96,11 +98,13 @@ def unknown():
         return render_template('challenges/chal_2.html', stats=stats)
     else:
         form=SubmissionForm()
+        att=5
+        attempts=Attempts.query.filter_by(of=current_user.id, stage=2).first()
         if form.validate_on_submit():
-            sub(form)
-            return redirect(url_for('challenges.unknown', form=form))
+            sub(form, att)
+            return redirect(url_for('challenges.unknown'))
 
-        return render_template('challenges/chal_2.html', form=form)
+        return render_template('challenges/chal_2.html', form=form, attempts=attempts, att=att)
 
 @challenges.route('/amateur', methods=['GET', 'POST'])
 @login_required
@@ -113,11 +117,13 @@ def amateur():
         return render_template('challenges/chal_3.html', stats=stats)
     else:
         form=SubmissionForm()
+        att=5
+        attempts=Attempts.query.filter_by(of=current_user.id, stage=3).first()
         if form.validate_on_submit():
-            sub(form)
-            return redirect(url_for('challenges.amateur', form=form))
+            sub(form, att)
+            return redirect(url_for('challenges.amateur'))
 
-        return render_template('challenges/chal_3.html', form=form)
+        return render_template('challenges/chal_3.html', form=form, attempts=attempts, att=att)
 
 @challenges.route('/average', methods=['GET', 'POST'])
 @login_required
@@ -130,11 +136,13 @@ def average():
         return render_template('challenges/chal_4.html', stats=stats)
     else:
         form=SubmissionForm()
+        att=5
+        attempts=Attempts.query.filter_by(of=current_user.id, stage=4).first()
         if form.validate_on_submit():
-            sub(form)
-            return redirect(url_for('challenges.average', form=form))
+            sub(form, att)
+            return redirect(url_for('challenges.average'))
 
-        return render_template('challenges/chal_4.html', form=form)
+        return render_template('challenges/chal_4.html', form=form, attempts=attempts, att=att)
 
 @challenges.route('/working', methods=['GET', 'POST'])
 @login_required
@@ -147,11 +155,13 @@ def working():
         return render_template('challenges/chal_5.html', stats=stats)
     else:
         form=SubmissionForm()
+        att=5
+        attempts=Attempts.query.filter_by(of=current_user.id, stage=5).first()
         if form.validate_on_submit():
-            sub(form)
-            return redirect(url_for('challenges.working', form=form))
+            sub(form, att)
+            return redirect(url_for('challenges.working'))
 
-        return render_template('challenges/chal_5.html', form=form)
+        return render_template('challenges/chal_5.html', form=form, attempts=attempts, att=att)
 
 @challenges.route('/famous', methods=['GET', 'POST'])
 @login_required
@@ -164,11 +174,13 @@ def famous():
         return render_template('challenges/chal_6.html', stats=stats)
     else:
         form=SubmissionForm()
+        att=3
+        attempts=Attempts.query.filter_by(of=current_user.id, stage=6).first()
         if form.validate_on_submit():
-            sub(form)
-            return redirect(url_for('challenges.famous', form=form))
+            sub(form, att)
+            return redirect(url_for('challenges.famous'))
 
-        return render_template('challenges/chal_6.html', form=form)
+        return render_template('challenges/chal_6.html', form=form, attempts=attempts, att=att)
 
 @challenges.route('/creator', methods=['GET', 'POST'])
 @login_required
@@ -181,11 +193,13 @@ def creator():
         return render_template('challenges/chal_7.html', stats=stats)
     else:
         form=SubmissionForm()
+        att=3
+        attempts=Attempts.query.filter_by(of=current_user.id, stage=7).first()
         if form.validate_on_submit():
-            sub(form)
-            return redirect(url_for('challenges.creator', form=form))
+            sub(form, att)
+            return redirect(url_for('challenges.creator'))
 
-        return render_template('challenges/chal_7.html', form=form)
+        return render_template('challenges/chal_7.html', form=form, attempts=attempts, att=att)
 
 @challenges.route('/wip', methods=['GET', 'POST'])
 @login_required

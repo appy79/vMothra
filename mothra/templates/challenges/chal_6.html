@@ -4,11 +4,16 @@
 <div class="container">
   <div class="text-center">
     <h1>The Famous Upgrade</h1>
-    <h2>You know what to do.</h2>
+    <h2>You saw me once. Find me.</h2>
   </div>
 
   {% if current_user.level==5 or current_user.user_type=="Godzilla" %}
   <h3 class="text-center">Submission</h3>
+  {% if attempts %}
+<h4 class="text-center">Attempts Remaining --> {{ att-attempts.atmpts }}</h4>
+{% else %}
+<h4 class="text-center">Attempts Remaining --> {{ att }}</h4>
+{% endif %}
   <form method="POST">
     {{ form.hidden_tag() }}
     <div class="form-group">
